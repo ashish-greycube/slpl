@@ -1,0 +1,141 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:PL-{project}-{###}",
+ "creation": "2025-06-18 15:05:27.123389",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "project",
+  "sales_order",
+  "vehicle_no",
+  "ack_no",
+  "product_name",
+  "quantity",
+  "column_break_opzq",
+  "packing_date",
+  "delivery_note",
+  "lr_no",
+  "destination",
+  "section_break_owsy",
+  "packing_items",
+  "final_supply_reference",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "project",
+   "fieldtype": "Data",
+   "label": "Project"
+  },
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order"
+  },
+  {
+   "fieldname": "vehicle_no",
+   "fieldtype": "Data",
+   "label": "Vehicle No"
+  },
+  {
+   "fieldname": "ack_no",
+   "fieldtype": "Link",
+   "label": "ACK No",
+   "options": "Project"
+  },
+  {
+   "fieldname": "product_name",
+   "fieldtype": "Link",
+   "label": "Product Name",
+   "options": "Item"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Float",
+   "label": "Quantity"
+  },
+  {
+   "fieldname": "column_break_opzq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "packing_date",
+   "fieldtype": "Date",
+   "label": "Packing Date"
+  },
+  {
+   "fieldname": "delivery_note",
+   "fieldtype": "Link",
+   "label": "Delivery Note",
+   "options": "Delivery Note"
+  },
+  {
+   "fieldname": "lr_no",
+   "fieldtype": "Data",
+   "label": "LR No"
+  },
+  {
+   "fieldname": "destination",
+   "fieldtype": "Small Text",
+   "label": "Destination"
+  },
+  {
+   "fieldname": "section_break_owsy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "packing_items",
+   "fieldtype": "Table",
+   "label": "Packing Items",
+   "options": "Packing List Item Details MW"
+  },
+  {
+   "fieldname": "final_supply_reference",
+   "fieldtype": "Data",
+   "label": "Final Supply Reference",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Packing List MW",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-06-25 10:50:29.272159",
+ "modified_by": "Administrator",
+ "module": "SLPL",
+ "name": "Packing List MW",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

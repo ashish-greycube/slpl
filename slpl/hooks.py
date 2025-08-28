@@ -74,10 +74,10 @@ app_license = "mit"
 # ----------
 
 # add methods and filters to jinja environment
-# jinja = {
-# 	"methods": "slpl.utils.jinja_methods",
-# 	"filters": "slpl.utils.jinja_filters"
-# }
+jinja = {
+	"methods": ["slpl.jinja.get_qr_code", "slpl.jinja.get_qr_data", "slpl.jinja.get_table_data"],
+	# "filters": "slpl.utils.jinja_filters"
+}
 
 # Installation
 # ------------

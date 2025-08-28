@@ -1,0 +1,111 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-06-18 15:18:38.940090",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "qty",
+  "length",
+  "height",
+  "column_break_qchf",
+  "net",
+  "gross",
+  "width",
+  "packaging_type",
+  "unit",
+  "section_break_vrij",
+  "description",
+  "unit_count"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Qty "
+  },
+  {
+   "fieldname": "length",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Length (MM)"
+  },
+  {
+   "fieldname": "height",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Height (MM)"
+  },
+  {
+   "fieldname": "column_break_qchf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "net",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "NET (KG)"
+  },
+  {
+   "fieldname": "gross",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Gross (KG)"
+  },
+  {
+   "fieldname": "width",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Width (MM)"
+  },
+  {
+   "fieldname": "packaging_type",
+   "fieldtype": "Data",
+   "label": "Packaging Type"
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unit"
+  },
+  {
+   "fieldname": "section_break_vrij",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "unit_count",
+   "fieldtype": "Int",
+   "label": "Unit Count "
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-06-25 10:49:52.229654",
+ "modified_by": "Administrator",
+ "module": "SLPL",
+ "name": "Packing List Item Details MW",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
