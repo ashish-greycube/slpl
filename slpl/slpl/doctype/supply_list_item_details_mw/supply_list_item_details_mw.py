@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class FinalSupplyItemDetailsMW(Document):
+class SupplyListItemDetailsMW(Document):
 	pass

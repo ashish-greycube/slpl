@@ -6,28 +6,26 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "project",
-  "sales_order",
-  "vehicle_no",
+  "date",
   "ack_no",
   "product_name",
   "quantity",
-  "column_break_opzq",
-  "packing_date",
-  "delivery_note",
+  "column_break_tvfh",
+  "vehicle_no",
+  "mdcc",
   "lr_no",
-  "destination",
   "section_break_owsy",
   "packing_items",
-  "final_supply_reference",
-  "amended_from"
+  "amended_from",
+  "supply_list_details_tab",
+  "customer",
+  "destination",
+  "column_break_shgk",
+  "supply_list_reference",
+  "sales_order",
+  "sales_order_date"
  ],
  "fields": [
-  {
-   "fieldname": "project",
-   "fieldtype": "Data",
-   "label": "Project"
-  },
   {
    "fieldname": "sales_order",
    "fieldtype": "Link",
@@ -57,22 +55,6 @@
    "label": "Quantity"
   },
   {
-   "fieldname": "column_break_opzq",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "Today",
-   "fieldname": "packing_date",
-   "fieldtype": "Date",
-   "label": "Packing Date"
-  },
-  {
-   "fieldname": "delivery_note",
-   "fieldtype": "Link",
-   "label": "Delivery Note",
-   "options": "Delivery Note"
-  },
-  {
    "fieldname": "lr_no",
    "fieldtype": "Data",
    "label": "LR No"
@@ -93,12 +75,6 @@
    "options": "Packing List Item Details MW"
   },
   {
-   "fieldname": "final_supply_reference",
-   "fieldtype": "Data",
-   "label": "Final Supply Reference",
-   "read_only": 1
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -107,17 +83,58 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "sales_order_date",
+   "fieldtype": "Date",
+   "label": "Sales Order Date"
+  },
+  {
+   "fieldname": "mdcc",
+   "fieldtype": "Data",
+   "label": "MDCC"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "supply_list_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Supply List"
+  },
+  {
+   "fieldname": "column_break_shgk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "supply_list_reference",
+   "fieldtype": "Data",
+   "label": "Supply List Reference",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_tvfh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-06-25 10:50:29.272159",
+ "modified": "2026-08-14 13:42:30.429590",
  "modified_by": "Administrator",
  "module": "SLPL",
  "name": "Packing List MW",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

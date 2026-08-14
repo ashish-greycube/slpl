@@ -9,16 +9,16 @@
   "item_code",
   "qty",
   "length",
+  "width",
   "height",
   "column_break_qchf",
-  "net",
   "gross",
-  "width",
+  "net",
   "packaging_type",
   "unit",
+  "unit_count",
   "section_break_vrij",
-  "description",
-  "unit_count"
+  "description"
  ],
  "fields": [
   {
@@ -74,6 +74,7 @@
    "label": "Packaging Type"
   },
   {
+   "description": "This is the Unit Number(Box Number) in which the corresponding product is packed.",
    "fieldname": "unit",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -98,7 +99,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-06-25 10:49:52.229654",
+ "modified": "2026-08-14 13:48:38.050861",
  "modified_by": "Administrator",
  "module": "SLPL",
  "name": "Packing List Item Details MW",

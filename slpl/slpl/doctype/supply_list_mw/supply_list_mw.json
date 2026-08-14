@@ -1,0 +1,176 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "SL-.client.-.project.-.###",
+ "creation": "2026-04-23 10:07:01.006169",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_mlkb",
+  "project",
+  "sales_order",
+  "column_break_ejby",
+  "project_description",
+  "client",
+  "finished_good_bom_details_section",
+  "refresh_bom_details",
+  "bom_details",
+  "section_break_ousm",
+  "refresh_items",
+  "items",
+  "additional_items_section",
+  "from_bom",
+  "bom",
+  "get_items",
+  "additional_items",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_mlkb",
+   "fieldtype": "Section Break",
+   "label": "Project Details"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Supply List MW",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Project",
+   "options": "Project",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "project.sales_order",
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ejby",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "project.custom_project_description",
+   "fieldname": "project_description",
+   "fieldtype": "Data",
+   "label": "Project Description",
+   "read_only": 1
+  },
+  {
+   "fieldname": "finished_good_bom_details_section",
+   "fieldtype": "Section Break",
+   "label": "Finished Good BOM Details"
+  },
+  {
+   "fieldname": "bom_details",
+   "fieldtype": "Table",
+   "label": "BOM Details",
+   "options": "Supply List Finished Good BOM Detail MW"
+  },
+  {
+   "fieldname": "section_break_ousm",
+   "fieldtype": "Section Break",
+   "label": "BOM Wise Item Details"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Supply List Item Details MW"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "additional_items_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Items"
+  },
+  {
+   "fieldname": "from_bom",
+   "fieldtype": "Select",
+   "label": "From BOM",
+   "options": "\nYes\nNo"
+  },
+  {
+   "depends_on": "eval:doc.from_bom==\"Yes\";",
+   "fieldname": "bom",
+   "fieldtype": "Link",
+   "label": "BOM",
+   "mandatory_depends_on": "eval:doc.from_bom==\"Yes\";",
+   "options": "BOM"
+  },
+  {
+   "depends_on": "eval:doc.from_bom==\"Yes\";",
+   "fieldname": "get_items",
+   "fieldtype": "Button",
+   "label": "Get Items"
+  },
+  {
+   "fieldname": "additional_items",
+   "fieldtype": "Table",
+   "label": "Additional Items",
+   "options": "Supply List Additional Item Detail MW"
+  },
+  {
+   "fetch_from": "sales_order.customer",
+   "fieldname": "client",
+   "fieldtype": "Link",
+   "label": "Client",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.bom_details.length>0;",
+   "fieldname": "refresh_bom_details",
+   "fieldtype": "Button",
+   "label": "Refresh BOM Details"
+  },
+  {
+   "depends_on": "eval:doc.items.length > 0;",
+   "fieldname": "refresh_items",
+   "fieldtype": "Button",
+   "label": "Refresh Items"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-08-14 13:27:33.256687",
+ "modified_by": "Administrator",
+ "module": "SLPL",
+ "name": "Supply List MW",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
