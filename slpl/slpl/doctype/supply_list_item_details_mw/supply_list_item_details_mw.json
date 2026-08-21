@@ -19,7 +19,8 @@
   "delivered_qty",
   "remaining_qty",
   "column_break_gqmm",
-  "delivered_percentage"
+  "delivered_percentage",
+  "bom_details_item_row"
  ],
  "fields": [
   {
@@ -101,13 +102,20 @@
   {
    "fieldname": "column_break_gqmm",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bom_details_item_row",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "BOM Details Item Row",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-08-14 13:24:50.357247",
+ "modified": "2026-08-17 12:02:53.747391",
  "modified_by": "Administrator",
  "module": "SLPL",
  "name": "Supply List Item Details MW",

@@ -13,7 +13,10 @@
   "bom_status",
   "bom",
   "fetch_bom",
-  "finished_good_status"
+  "finished_good_status",
+  "section_break_rioj",
+  "show_bom_tree",
+  "bom_tree"
  ],
  "fields": [
   {
@@ -68,13 +71,27 @@
    "fieldname": "tag_no",
    "fieldtype": "Data",
    "label": "Tag No"
+  },
+  {
+   "fieldname": "section_break_rioj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "show_bom_tree",
+   "fieldtype": "Button",
+   "label": "Show BOM Tree"
+  },
+  {
+   "fieldname": "bom_tree",
+   "fieldtype": "HTML",
+   "label": "BOM Tree"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-08-14 13:10:12.975284",
+ "modified": "2026-08-18 15:30:36.942477",
  "modified_by": "Administrator",
  "module": "SLPL",
  "name": "Supply List Finished Good BOM Detail MW",

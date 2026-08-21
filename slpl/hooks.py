@@ -75,9 +75,17 @@ app_license = "mit"
 
 # add methods and filters to jinja environment
 jinja = {
-	"methods": ["slpl.jinja.get_qr_code", "slpl.jinja.get_qr_data", "slpl.jinja.get_table_data"],
-	# "filters": "slpl.utils.jinja_filters"
+	"methods": [
+		"slpl.jinja.get_qr_code",
+		"slpl.jinja.get_company_address",
+		"slpl.jinja.get_table_data",
+		"slpl.jinja.get_boxes",
+		"slpl.jinja.get_qr_table_text"
+	],
 }
+
+# On Migrate Create Custom Fields
+after_migrate = "slpl.migrate.after_migrate"
 
 # Installation
 # ------------
@@ -129,21 +137,22 @@ jinja = {
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Work Order": "slpl.overrides.work_order.CustomWorkOrder"
+}
 
 # Document Events
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"Production Plan": {
+		"validate": "slpl.api.on_save_fetch_serial_numbers",
+	},
+    "Work Order": {
+        "after_insert": "slpl.api.on_work_order_save_fetch_serial_numbers"
+	}
+}
 
 # Scheduled Tasks
 # ---------------

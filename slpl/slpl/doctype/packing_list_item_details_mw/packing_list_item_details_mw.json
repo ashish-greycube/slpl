@@ -11,14 +11,15 @@
   "length",
   "width",
   "height",
+  "is_additional_item",
   "column_break_qchf",
   "gross",
   "net",
   "packaging_type",
   "unit",
-  "unit_count",
   "section_break_vrij",
-  "description"
+  "description",
+  "supply_row_name"
  ],
  "fields": [
   {
@@ -70,8 +71,9 @@
   },
   {
    "fieldname": "packaging_type",
-   "fieldtype": "Data",
-   "label": "Packaging Type"
+   "fieldtype": "Link",
+   "label": "Packaging Type",
+   "options": "Packaging Type MW"
   },
   {
    "description": "This is the Unit Number(Box Number) in which the corresponding product is packed.",
@@ -85,21 +87,30 @@
    "fieldtype": "Section Break"
   },
   {
+   "fetch_from": "item_code.description",
    "fieldname": "description",
    "fieldtype": "Small Text",
    "label": "Description"
   },
   {
-   "fieldname": "unit_count",
-   "fieldtype": "Int",
-   "label": "Unit Count "
+   "fieldname": "supply_row_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Supply Row Name",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_additional_item",
+   "fieldtype": "Check",
+   "label": "Is Additional Item?"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-08-14 13:48:38.050861",
+ "modified": "2026-08-19 17:14:46.862715",
  "modified_by": "Administrator",
  "module": "SLPL",
  "name": "Packing List Item Details MW",
