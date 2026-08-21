@@ -1,0 +1,20 @@
+{
+ "app": "slpl",
+ "bg_color": "gray",
+ "creation": "2026-08-21 16:28:11.628642",
+ "docstatus": 0,
+ "doctype": "Desktop Icon",
+ "hidden": 0,
+ "icon_type": "Link",
+ "idx": 0,
+ "label": "SLPL",
+ "link_to": "SLPL",
+ "link_type": "Workspace Sidebar",
+ "modified": "2026-08-21 16:33:07.116145",
+ "modified_by": "Administrator",
+ "name": "SLPL",
+ "owner": "Administrator",
+ "restrict_removal": 0,
+ "roles": [],
+ "standard": 1
+}

@@ -1,0 +1,26 @@
+{
+ "app": "slpl",
+ "creation": "2026-08-21 16:28:11.611931",
+ "docstatus": 0,
+ "doctype": "Workspace Sidebar",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "SLPL",
+   "link_to": "SLPL",
+   "link_type": "Workspace",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-08-21 16:34:39.469803",
+ "modified_by": "Administrator",
+ "name": "SLPL",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "SLPL"
+}
