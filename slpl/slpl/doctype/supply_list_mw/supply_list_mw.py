@@ -363,6 +363,12 @@ def get_finished_goods_of_sales_order_with_bom_items(doc):
 				bom_status = "BOM Not Exist"
 				serial_no = None
 
+			if serial_no:
+				serial_no = [s['name'] for s in serial_no]
+			else:
+				if item.custom_serial_no:
+					serial_no = [sn.strip() for sn in item.custom_serial_no.split(",") if sn.strip()]
+
 			if item.qty > 1:
 				for i in range(int(item.qty)):
 					self.append("bom_details", {
@@ -371,7 +377,7 @@ def get_finished_goods_of_sales_order_with_bom_items(doc):
 						"bom": default_bom,
 						"bom_status": bom_status,
 						"finished_good_status": "Not Added In Supply List",
-						"tag_no": serial_no[i]["name"] if serial_no and len(serial_no) > i else None
+						"tag_no": serial_no[i] if serial_no and len(serial_no) > i else None
 					})
 			elif item.qty == 1:
 				self.append("bom_details", {
@@ -380,7 +386,7 @@ def get_finished_goods_of_sales_order_with_bom_items(doc):
 					"bom": default_bom,
 					"bom_status": bom_status,
 					"finished_good_status": "Not Added In Supply List",
-					"tag_no": serial_no[0]["name"] if serial_no else None
+					"tag_no": serial_no[0] if serial_no else None
 				})
 		self.save(ignore_permissions=True)
 
