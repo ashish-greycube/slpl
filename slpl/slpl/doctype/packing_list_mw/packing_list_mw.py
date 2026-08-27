@@ -10,6 +10,9 @@ class PackingListMW(Document):
 
 	def validate(self):
 		self.set_unique_packing_units()
+
+	def on_cancel(self):
+		self.on_cancel_revert_delivered_qty_and_percentage()
 	
 	def set_unique_packing_units(self):
 		packing_units = []
@@ -31,6 +34,25 @@ class PackingListMW(Document):
 		original_qty, previously_delivered_qty = frappe.db.get_value(doctype, row, ["quantity", "delivered_qty"]) or (0, 0)
 								
 		delivered_qty = previously_delivered_qty + qty
+		remaining_qty = original_qty - delivered_qty
+		delivered_percentage = round((delivered_qty / original_qty) * 100, 2)
+
+		frappe.db.set_value(doctype, row, "delivered_qty", delivered_qty)
+		frappe.db.set_value(doctype, row, "remaining_qty", remaining_qty)
+		frappe.db.set_value(doctype, row, "delivered_percentage", delivered_percentage)
+
+	def on_cancel_revert_delivered_qty_and_percentage(self):
+		if self.packing_items:
+			for item in self.packing_items:
+				if item.supply_row_name and item.is_additional_item:
+					self.revert_percentage("Supply List Additional Item Detail MW", item.qty, item.supply_row_name)
+				else:
+					self.revert_percentage("Supply List Item Details MW", item.qty, item.supply_row_name)
+
+	def revert_percentage(self, doctype, qty, row):
+		original_qty, already_delivered_qty = frappe.db.get_value(doctype, row, ["quantity", "delivered_qty"]) or (0, 0)
+								
+		delivered_qty = already_delivered_qty - qty
 		remaining_qty = original_qty - delivered_qty
 		delivered_percentage = round((delivered_qty / original_qty) * 100, 2)
 
