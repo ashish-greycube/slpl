@@ -114,8 +114,9 @@
   },
   {
    "fieldname": "supply_list_reference",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "Supply List Reference",
+   "options": "Supply List MW",
    "read_only": 1
   },
   {
@@ -141,7 +142,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-19 17:16:55.479959",
+ "modified": "2026-08-27 11:45:05.034467",
  "modified_by": "Administrator",
  "module": "SLPL",
  "name": "Packing List MW",
