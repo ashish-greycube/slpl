@@ -360,7 +360,7 @@ def get_finished_goods_of_sales_order_with_bom_items(doc):
 				bom_status = "BOM Exist"
 				serial_no = self.get_serial_no_of_finished_good_using_bom(default_bom, item.item_code)
 			else:
-				bom_status = "BOM Not Exist"
+				bom_status = "BOM Does Not Exist"
 				serial_no = None
 
 			if serial_no:
