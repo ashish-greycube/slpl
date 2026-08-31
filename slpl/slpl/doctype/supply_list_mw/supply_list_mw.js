@@ -268,7 +268,12 @@ function open_create_packing_list_dialog(frm) {
                     { fieldname: "original_qty", fieldtype: "Float", label: __("Original Qty"), read_only: 1, in_list_view: 1 },
                     { fieldname: "delivered_qty", fieldtype: "Float", label: __("Delivered Qty"), read_only: 1, in_list_view: 1 },
                     { fieldname: "remaining_qty", fieldtype: "Float", label: __("Remaining Qty"), read_only: 1, in_list_view: 1 },
-                    { fieldname: "qty_to_transfer", fieldtype: "Float", label: __("Qty To Transfer"), in_list_view: 1 },
+                    {
+                        fieldname: "qty_to_transfer",
+                        fieldtype: "Float",
+                        label: __("Qty To Transfer"),
+                        in_list_view: 1,
+                    },
                     { fieldname: "supply_row_name", fieldtype: "Data", label: __("Supply Row Name"), hidden: 1 },
                     { fieldname: "is_additional_item", fieldtype: "Check", label: __("Is Additional Item"), hidden: 1 }
                 ],
@@ -278,6 +283,18 @@ function open_create_packing_list_dialog(frm) {
         primary_action_label: __("Create"),
         primary_action() {
             let rows = dialog.fields_dict.packing_rows.grid.get_data();
+
+            let invalid_rows = get_invalid_packing_rows(rows);
+            if (invalid_rows.length) {
+                // Belt-and-braces: the Create button is disabled while any row is
+                // invalid, but this still guards against e.g. an Enter-key submit.
+                frappe.throw(
+                    __("Qty To Transfer cannot be greater than Remaining Qty for item(s): {0}", [
+                        invalid_rows.map((row) => row.item_code).join(", ")
+                    ])
+                );
+            }
+
             dialog.hide();
 
             let finished_good_row = selected_rows.find((row) => row.bom_details_item_row);
@@ -304,6 +321,10 @@ function open_create_packing_list_dialog(frm) {
         }
     });
     dialog.show();
+}
+
+function get_invalid_packing_rows(rows) {
+    return rows.filter((row) => flt(row.qty_to_transfer) > flt(row.remaining_qty));
 }
 
 function lock_fully_delivered_rows(frm) {
