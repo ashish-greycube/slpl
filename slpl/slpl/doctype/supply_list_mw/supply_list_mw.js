@@ -295,27 +295,41 @@ function open_create_packing_list_dialog(frm) {
                 );
             }
 
-            dialog.hide();
-
-            let finished_good_row = selected_rows.find((row) => row.bom_details_item_row);
-            let bom_detail = finished_good_row
-                ? (frm.doc.bom_details || []).find((d) => d.name === finished_good_row.bom_details_item_row)
-                : null;
-
-            frappe.model.open_mapped_doc({
-                method: "slpl.slpl.doctype.supply_list_mw.supply_list_mw.make_packing_list",
-                frm: frm,
+            // Stock availability can only be checked server-side (against the
+            // warehouse configured in Mechwell Setting MW), so this call's
+            // callback only fires once that also passes - frappe.throw() inside
+            // it aborts silently (error dialog shown, callback never runs).
+            frappe.call({
+                method: "slpl.slpl.doctype.supply_list_mw.supply_list_mw.validate_stock_availability",
                 args: {
-                    selected_items: JSON.stringify(
-                        rows.map((row) => ({
-                            item_code: row.item_code,
-                            qty_to_pack: row.qty_to_transfer,
-                            supply_row_name: row.supply_row_name,
-                            is_additional_item: row.is_additional_item
-                        }))
-                    ),
-                    product_name: bom_detail ? bom_detail.item : null,
-                    quantity: bom_detail ? bom_detail.qty : null
+                    items: rows.map((row) => ({ item_code: row.item_code, qty: row.qty_to_transfer }))
+                },
+                freeze: true,
+                freeze_message: __("Checking stock availability..."),
+                callback: () => {
+                    dialog.hide();
+
+                    let finished_good_row = selected_rows.find((row) => row.bom_details_item_row);
+                    let bom_detail = finished_good_row
+                        ? (frm.doc.bom_details || []).find((d) => d.name === finished_good_row.bom_details_item_row)
+                        : null;
+
+                    frappe.model.open_mapped_doc({
+                        method: "slpl.slpl.doctype.supply_list_mw.supply_list_mw.make_packing_list",
+                        frm: frm,
+                        args: {
+                            selected_items: JSON.stringify(
+                                rows.map((row) => ({
+                                    item_code: row.item_code,
+                                    qty_to_pack: row.qty_to_transfer,
+                                    supply_row_name: row.supply_row_name,
+                                    is_additional_item: row.is_additional_item
+                                }))
+                            ),
+                            product_name: bom_detail ? bom_detail.item : null,
+                            quantity: bom_detail ? bom_detail.qty : null
+                        }
+                    });
                 }
             });
         }

@@ -3,8 +3,10 @@
 
 import json
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
+from frappe.utils import flt
 from frappe.utils.nestedset import get_descendants_of
 from frappe.contacts.doctype.address.address import get_address_display
 
@@ -396,6 +398,45 @@ def get_finished_goods_of_sales_order_with_bom_items(doc):
 # ---------------------------------------------------------------------------------
 # Standalone endpoints (Additional Items / Fetch BOM / Create Packing List buttons)
 # ---------------------------------------------------------------------------------
+@frappe.whitelist()
+def validate_stock_availability(items):
+	if isinstance(items, str):
+		items = frappe.parse_json(items)
+
+	warehouse = frappe.get_doc("Mechwell Setting MW").default_warehouse_to_validate_quantity
+	if not warehouse:
+		frappe.throw(
+			_("Please configure <b>Default Warehouse to Validate Quantity</b> in Mechwell Setting MW")
+		)
+
+	# Aggregate by item_code first, in case the same item appears in more
+	# than one row, so the check reflects the total quantity actually needed.
+	required_qty_by_item = {}
+	for item in items:
+		item_code = item.get("item_code")
+		qty = flt(item.get("qty"))
+		if not item_code or qty <= 0:
+			continue
+		required_qty_by_item[item_code] = required_qty_by_item.get(item_code, 0) + qty
+
+	shortages = []
+	for item_code, required_qty in required_qty_by_item.items():
+		available_qty = flt(
+			frappe.db.get_value("Bin", {"item_code": item_code, "warehouse": warehouse}, "actual_qty")
+		)
+		if available_qty < required_qty:
+			shortages.append(
+				_("{0}: required {1}, available {2}").format(item_code, required_qty, available_qty)
+			)
+
+	if shortages:
+		frappe.throw(
+			_("Insufficient stock in warehouse {0} for:<br>{1}").format(
+				frappe.bold(warehouse), "<br>".join(shortages)
+			)
+		)
+
+
 @frappe.whitelist()
 def make_packing_list(source_name, target_doc=None):
 	selected_items = (frappe.flags.args or {}).get("selected_items")
