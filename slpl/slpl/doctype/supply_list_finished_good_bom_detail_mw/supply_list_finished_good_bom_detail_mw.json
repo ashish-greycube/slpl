@@ -14,6 +14,8 @@
   "bom",
   "fetch_bom",
   "finished_good_status",
+  "packing_status",
+  "packing_percentage",
   "section_break_rioj",
   "show_bom_tree",
   "bom_tree"
@@ -60,6 +62,22 @@
    "in_list_view": 1,
    "label": "Finished Good Status",
    "options": "\nAdded In Supply List\nNot Added In Supply List",
+   "read_only": 1
+  },
+  {
+   "default": "Not Started",
+   "fieldname": "packing_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Packing Status",
+   "options": "Not Started\nInitiated\nPartially Delivered\nFully Delivered",
+   "read_only": 1
+  },
+  {
+   "fieldname": "packing_percentage",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Packing %",
    "read_only": 1
   },
   {

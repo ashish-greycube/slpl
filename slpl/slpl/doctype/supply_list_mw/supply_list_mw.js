@@ -14,6 +14,7 @@ const PACKING_LIST_SOURCE_TABLES = [
 
 frappe.ui.form.on("Supply List MW", {
     refresh(frm) {
+        style_items_rows(frm);
         if (frm.doc.docstatus == 1) {
             setup_packing_list_button(frm);
         }
@@ -70,7 +71,7 @@ frappe.ui.form.on("Supply List MW", {
                         row.description = item.description;
                     });
                     frm.refresh_field("additional_items");
-                    lock_fully_delivered_rows(frm);
+                    style_items_rows(frm);
                     frm.save();
                 }
             }
@@ -85,7 +86,7 @@ frappe.ui.form.on("Supply List MW", {
 
             frm.refresh_field("bom_details");
             frm.refresh_field("items");
-            lock_fully_delivered_rows(frm);
+            style_items_rows(frm);
 
             if (r.message.found) {
                 frappe.show_alert({
@@ -100,13 +101,20 @@ frappe.ui.form.on("Supply List MW", {
                     indicator: "orange"
                 });
             }
+
+            if (r.message.not_found == 0 || r.message.found == 0) {
+                frappe.show_alert({
+                    message: __("Successfully Refreshed BOM Details Table"),
+                    indicator: "green"
+                });
+            }
         });
     },
 
     refresh_items(frm) {
         frm.call("refresh_items").then(() => {
             frm.refresh_field("items");
-            lock_fully_delivered_rows(frm);
+            style_items_rows(frm);
             frappe.show_alert({ message: __("Items refreshed"), indicator: "green" });
         });
     }
@@ -219,12 +227,12 @@ function setup_packing_list_button(frm) {
         }
         grid.wrapper.off("click.packing_list_toggle").on("click.packing_list_toggle", ".grid-row-check", () => {
             setTimeout(() => {
-                lock_fully_delivered_rows(frm);
+                style_items_rows(frm);
                 toggle_create_packing_list_button(frm);
             }, 0);
         });
     });
-    lock_fully_delivered_rows(frm);
+    style_items_rows(frm);
     toggle_create_packing_list_button(frm);
 }
 
@@ -341,6 +349,12 @@ function get_invalid_packing_rows(rows) {
     return rows.filter((row) => flt(row.qty_to_transfer) > flt(row.remaining_qty));
 }
 
+// Runs both row-styling passes for the items / additional_items grids.
+function style_items_rows(frm) {
+    lock_fully_delivered_rows(frm);
+    highlight_stock_matching_rows(frm);
+}
+
 function lock_fully_delivered_rows(frm) {
     PACKING_LIST_SOURCE_TABLES.forEach((fieldname) => {
         let grid = frm.fields_dict[fieldname] && frm.fields_dict[fieldname].grid;
@@ -358,6 +372,60 @@ function lock_fully_delivered_rows(frm) {
                 grid_row.doc.__checked = 0;
                 $checkbox.prop("checked", false);
             }
+            // Each cell (.col) paints its own background over the row, so
+            // coloring grid_row.wrapper alone is invisible - color every
+            // cell directly instead.
+            grid_row.wrapper.find(".data-row > .col").css("background-color", is_fully_delivered ? "#e7e7e7" : "");
         });
+    });
+}
+
+// Green-highlights rows (not already fully delivered) where the warehouse's
+// available qty exactly matches the row's remaining qty. Needs a server call
+// (Bin qty isn't available client-side), so this runs after lock_fully_delivered_rows.
+function highlight_stock_matching_rows(frm) {
+    let item_codes = new Set();
+    PACKING_LIST_SOURCE_TABLES.forEach((fieldname) => {
+        (frm.doc[fieldname] || []).forEach((row) => {
+            if (row.item_code && flt(row.delivered_percentage) < 100) {
+                item_codes.add(row.item_code);
+            }
+        });
+    });
+
+    if (!item_codes.size) {
+        return;
+    }
+
+    frappe.call({
+        method: "slpl.slpl.doctype.supply_list_mw.supply_list_mw.get_warehouse_stock_qty",
+        args: { item_codes: Array.from(item_codes) },
+        callback: (r) => {
+            let stock_map = r.message || {};
+
+            PACKING_LIST_SOURCE_TABLES.forEach((fieldname) => {
+                let grid = frm.fields_dict[fieldname] && frm.fields_dict[fieldname].grid;
+                if (!grid) {
+                    return;
+                }
+                (grid.grid_rows || []).forEach((grid_row) => {
+                    if (!grid_row.doc || !grid_row.wrapper) {
+                        return;
+                    }
+
+                    if (flt(grid_row.doc.delivered_percentage) >= 100) {
+                        // Fully delivered rows are already grayed out - leave them.
+                        return;
+                    }
+
+                    let remaining_qty = flt(grid_row.doc.quantity) - flt(grid_row.doc.delivered_qty);
+                    let available_qty = stock_map[grid_row.doc.item_code];
+                    let matches_stock = available_qty !== undefined && flt(available_qty) >= remaining_qty;
+                    // Same technique as the gray fully-delivered rows: each cell
+                    // paints its own background, so color every cell (.col) directly.
+                    grid_row.wrapper.find(".data-row > .col").css("background-color", matches_stock ? "#daf7e2" : "");
+                });
+            });
+        }
     });
 }

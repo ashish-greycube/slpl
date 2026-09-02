@@ -12,9 +12,13 @@ from frappe.contacts.doctype.address.address import get_address_display
 
 
 FINISH_GOODS_ITEM_GROUP = "FINISH GOODS"
+PACKING_INITIATED_THRESHOLD = 15  # percent - above this, status moves from "Initiated" to "Partially Delivered"
+
+
 class SupplyListMW(Document):
 	def validate(self):
 		self.get_bom_wise_items()
+		self.calculate_packing_status()
 
 	def get_all_finish_goods_groups(self):
 		return [FINISH_GOODS_ITEM_GROUP] + get_descendants_of(
@@ -170,6 +174,24 @@ class SupplyListMW(Document):
 			self.items = []
 			for item in bom_wise_items:
 				self.append("items", item)
+
+	def calculate_packing_status(self):
+		for bom_detail in self.bom_details:
+			rows = [row for row in self.items if row.bom_details_item_row == bom_detail.name]
+			total_qty = sum(flt(row.quantity) for row in rows)
+			delivered_qty = sum(flt(row.delivered_qty) for row in rows)
+
+			percentage = (delivered_qty / total_qty * 100) if total_qty else 0
+			bom_detail.packing_percentage = percentage
+
+			if percentage >= 100:
+				bom_detail.packing_status = "Fully Delivered"
+			elif percentage > PACKING_INITIATED_THRESHOLD:
+				bom_detail.packing_status = "Partially Delivered"
+			elif percentage > 0:
+				bom_detail.packing_status = "Initiated"
+			else:
+				bom_detail.packing_status = "Not Started"
 
 	def get_zero_assemblies_and_boughout_items(self, bom, sales_order_item, tag_no, main_bom_no, bom_details_item_name):
 		boughtout_groups = self.get_all_boughtout_groups()
@@ -398,12 +420,33 @@ def get_finished_goods_of_sales_order_with_bom_items(doc):
 # ---------------------------------------------------------------------------------
 # Standalone endpoints (Additional Items / Fetch BOM / Create Packing List buttons)
 # ---------------------------------------------------------------------------------
+def get_stock_validation_warehouse():
+	return frappe.get_doc("Mechwell Setting MW").default_warehouse_to_validate_quantity
+
+
+@frappe.whitelist()
+def get_warehouse_stock_qty(item_codes):
+	if isinstance(item_codes, str):
+		item_codes = frappe.parse_json(item_codes)
+
+	warehouse = get_stock_validation_warehouse()
+	if not warehouse or not item_codes:
+		return {}
+
+	bins = frappe.get_all(
+		"Bin",
+		filters={"item_code": ["in", item_codes], "warehouse": warehouse},
+		fields=["item_code", "actual_qty"],
+	)
+	return {b.item_code: b.actual_qty for b in bins}
+
+
 @frappe.whitelist()
 def validate_stock_availability(items):
 	if isinstance(items, str):
 		items = frappe.parse_json(items)
 
-	warehouse = frappe.get_doc("Mechwell Setting MW").default_warehouse_to_validate_quantity
+	warehouse = get_stock_validation_warehouse()
 	if not warehouse:
 		frappe.throw(
 			_("Please configure <b>Default Warehouse to Validate Quantity</b> in Mechwell Setting MW")
@@ -513,3 +556,21 @@ def get_default_bom_of_finished_items_of_sales_order(item):
 		order_by="creation desc"
 	)
 	return default_bom
+
+
+def recalculate_packing_status(supply_list_name):
+	# Called from Packing List MW on submit/cancel so bom_details reflects the
+	# latest packing status immediately, without a full Supply List MW save
+	# (which would run get_bom_wise_items() and rebuild the items table).
+	doc = frappe.get_doc("Supply List MW", supply_list_name)
+	doc.calculate_packing_status()
+
+	for bom_detail in doc.bom_details:
+		frappe.db.set_value(
+			"Supply List Finished Good BOM Detail MW",
+			bom_detail.name,
+			{
+				"packing_percentage": bom_detail.packing_percentage,
+				"packing_status": bom_detail.packing_status,
+			},
+		)

@@ -3,17 +3,24 @@
 
 import frappe
 from frappe.model.document import Document
+from slpl.slpl.doctype.supply_list_mw.supply_list_mw import recalculate_packing_status
 
 class PackingListMW(Document):
 	def on_submit(self):
 		self.update_delivered_percentage_in_supply_list()
+		self.recalculate_supply_list_packing_status()
 
 	def validate(self):
 		self.set_unique_packing_units()
 
 	def on_cancel(self):
 		self.on_cancel_revert_delivered_qty_and_percentage()
-	
+		self.recalculate_supply_list_packing_status()
+
+	def recalculate_supply_list_packing_status(self):
+		if self.supply_list_reference:
+			recalculate_packing_status(self.supply_list_reference)
+
 	def set_unique_packing_units(self):
 		packing_units = []
 		if self.packing_items:

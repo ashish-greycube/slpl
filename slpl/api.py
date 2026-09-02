@@ -13,7 +13,7 @@ def on_save_fetch_serial_numbers(self, method=None):
                     }, 
                     "custom_serial_no"
                 )
-                if serial_nos:
+                if serial_nos and not item.custom_serial_no:
                     item.custom_serial_no = serial_nos
 
 # On save of Work Order if Production Plan and Production Plan Item is present, 
