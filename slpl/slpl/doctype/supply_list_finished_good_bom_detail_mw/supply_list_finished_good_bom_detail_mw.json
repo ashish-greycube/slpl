@@ -76,7 +76,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Packing Status",
-   "options": "Not Started\nInitiated\nPartially Delivered\nFully Delivered",
+   "options": "Not Started\nPartially Delivered\nFully Delivered",
    "read_only": 1
   },
   {

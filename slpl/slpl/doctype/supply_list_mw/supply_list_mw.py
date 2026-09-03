@@ -12,9 +12,6 @@ from frappe.contacts.doctype.address.address import get_address_display
 
 
 FINISH_GOODS_ITEM_GROUP = "FINISH GOODS"
-PACKING_INITIATED_THRESHOLD = 15  # percent - above this, status moves from "Initiated" to "Partially Delivered"
-
-
 class SupplyListMW(Document):
 	def validate(self):
 		self.get_bom_wise_items()
@@ -186,10 +183,8 @@ class SupplyListMW(Document):
 
 			if percentage >= 100:
 				bom_detail.packing_status = "Fully Delivered"
-			elif percentage > PACKING_INITIATED_THRESHOLD:
-				bom_detail.packing_status = "Partially Delivered"
 			elif percentage > 0:
-				bom_detail.packing_status = "Initiated"
+				bom_detail.packing_status = "Partially Delivered"
 			else:
 				bom_detail.packing_status = "Not Started"
 
